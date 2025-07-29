@@ -27,8 +27,6 @@ module Adk
             tools: tools_as_json(tools: tools)
           }.to_json
 
-          puts "BODY = #{request.body}"
-
           http.request(request) do |res|
             res.read_body do |chunk|
               yield LlmResponse.new(json_response: JSON.parse(chunk))

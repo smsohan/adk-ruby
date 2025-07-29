@@ -35,13 +35,12 @@ module Adk
           end
 
           model.generate_content(contents: contents, tools: @tools) do |response|
-            contents << {parts: response.model_content_parts, role: "model"}
             puts response.json_response
-            puts "contents = #{contents}"
+            contents << {parts: response.model_content_parts, role: "model"}
+
             text, function_call = response.text_part, response.function_call
             if function_call
               result = call_function(function: function_call)
-              puts "result = #{result}"
               contents << function_calls_parts(id: response.id, function_call: function_call, result: result)
               handle_prompt(prompt: nil, contents: contents)
             end

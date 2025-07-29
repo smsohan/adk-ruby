@@ -2,20 +2,22 @@ module Adk
   module Ruby
     module Tools
       class Tool
-        attr_accessor :name, :description, :parameters, :callable
+        attr_accessor :name, :description, :parameters, :response, :callable
 
-        def initialize(name:, description:, parameters:, callable:)
+        def initialize(name:, description:, parameters:, response:, callable:)
           @name = name
           @description = description
           @parameters = parameters
           @callable = callable
+          @response = response
         end
 
         def to_h
           {
             name: @name,
             description: @description,
-            parameters: @parameters
+            parameters: @parameters,
+            response: @response
           }
         end
 
