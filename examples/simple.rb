@@ -97,10 +97,24 @@ ives = Agents::Agent.new(
 )
 
 investor_agent =  Agents::LoopAgent.new(
-  name: "root_agent",
+  name: "investor_agent",
   description: "The root investor agent",
   sub_agents: [buffet, ives],
   model: gemini
 )
 
-Runner.run(agent: investor_agent)
+sentiment_agent = Agents::Agent.new(
+  name: "sentiment_agent",
+  description: "The investor sentiment agent",
+  model: gemini,
+  system_instruction: "You are making an investment decision research. Compare the sentiment from investors and label it using (positive, neutral, negative)"
+)
+
+root_agent =  Agents::Agent.new(
+  name: "root_agent",
+  description: "The root investor agent",
+  sub_agents: [investor_agent, sentiment_agent],
+  model: gemini
+)
+
+Runner.run(agent: root_agent)
