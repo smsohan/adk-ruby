@@ -12,7 +12,7 @@ module Adk
             candidate["content"]["parts"].map do |part|
               part["text"]
             end
-          end.compact
+          end.flatten.compact
         end
 
         def text_part

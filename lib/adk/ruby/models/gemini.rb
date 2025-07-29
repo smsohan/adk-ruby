@@ -30,6 +30,7 @@ module Adk
           if system_instruction
             body["system_instruction"] = {parts: [{text: system_instruction}]}
           end
+          # puts "body = #{body}"
           request.body = body.to_json
 
           http.request(request) do |res|

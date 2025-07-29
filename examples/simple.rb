@@ -13,7 +13,7 @@ math_tool = Tools::Tool.new(
     properties: {
       expression: {
         type: "string",
-        description: "The math problem to solve"
+        description: "The math problem to solve, expressions must match that of Ruby"
       },
     },
     required: ["expression"],
@@ -23,6 +23,9 @@ math_tool = Tools::Tool.new(
     description: "The result of the math problem"
   },
   callable: ->(expression:) {
+    unless expression.match?(/^[\d\s\+\-\*\/\(\).]+$/)
+      raise ArgumentError, "Invalid characters in expression"
+    end
     eval(expression)
   }
 )
@@ -50,25 +53,37 @@ weather_tool = Tools::Tool.new(
   }
 )
 
-agent = Agents::Agent.new(
-  name: "Gemini",
-  description: "A simple model that uses Gemini",
-  model: Models::Gemini.new(name: "gemini-2.5-flash",
-    project_id: "sohansm-project",
-    location: "us-central1"
-  ),
-  tools: [math_tool, weather_tool]
+gemini = Models::Gemini.new(name: "gemini-2.5-flash",
+  project_id: "sohansm-project",
+  location: "us-central1"
 )
 
+math_agent = Agents::Agent.new(
+  name: "math_agent",
+  description: "An agent that can solve math problems",
+  model: gemini,
+  tools: [math_tool]
+)
+
+weather_agent = Agents::Agent.new(
+  name: "weather_agent",
+  description: "An agent that can answer weather related queries",
+  model: gemini,
+  tools: [weather_tool]
+)
 
 buffet = Agents::Agent.new(
-  name: "Warren Buffet",
-  description: "An agent that thinks like Warren Buffet",
-  model: Models::Gemini.new(name: "gemini-2.5-flash",
-    project_id: "sohansm-project",
-    location: "us-central1"
-  ),
-  system_instruction: "You are a Warren Buffet. Answer the questions as Warren Buffet would."
+  name: "stock_investor",
+  description: "An stock market investor agent that thinks like Warren Buffet",
+  model: gemini,
+  system_instruction: "You are a Warren Buffet. Answer the questions as Warren Buffet would. Keep the answers short, in one quick paragraph"
 )
 
-Runner.run(agent: buffet)
+root_agent = Agents::Agent.new(
+  name: "root_agent",
+  description: "The root agent",
+  sub_agents: [math_agent, weather_agent, buffet],
+  model: gemini
+)
+
+Runner.run(agent: root_agent)

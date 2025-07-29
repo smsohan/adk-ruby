@@ -4,7 +4,7 @@ module Adk
       class Tool
         attr_accessor :name, :description, :parameters, :response, :callable
 
-        def initialize(name:, description:, parameters:, response:, callable:)
+        def initialize(name:, description:, parameters:, response: nil, callable:)
           @name = name
           @description = description
           @parameters = parameters
