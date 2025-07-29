@@ -53,7 +53,7 @@ module Adk
             end
 
             if text
-              puts @session.contents
+              # puts @session.contents
               puts "[#{@name}] #{text}"
             end
 
@@ -73,6 +73,7 @@ module Adk
           tool = @tools.find{|tool| tool.name == function["name"]}
           sym_args = function["args"].transform_keys(&:to_sym)
           begin
+            puts "[#{@name}] Calling function #{function["name"]}(#{function["args"]})"
             result = tool.callable.call(**sym_args)
           rescue Exception => error
             result = error.message
@@ -122,10 +123,7 @@ module Adk
             },
             callable: ->(agent_name:) {
               puts "[#{@name}] Calling another agent: #{agent_name} with prompt: #{@session.last_user_prompt}"
-              # puts "sub_agents : #{sub_agents.map(&:name)}"
-              sub_agent = sub_agents.find{|agent| agent.name == agent_name}
-              sub_agent.handle_prompt(prompt: @session.last_user_prompt)
-              # puts "[#{@name}] Done calling another agent"
+              sub_agents.find{|agent| agent.name == agent_name}.handle_prompt(prompt: @session.last_user_prompt)
             }
           )
         end
