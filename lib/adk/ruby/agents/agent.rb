@@ -6,9 +6,9 @@ module Adk
     module Agents
       class Agent
 
-        attr_accessor :name, :description, :model, :tools, :system_instruction, :sub_agents, :session
+        attr_accessor :name, :description, :model, :tools, :system_instruction, :sub_agents, :output_key
 
-        def initialize(name:, description:, model:, tools: [], system_instruction: "", sub_agents: [], session: nil)
+        def initialize(name:, description:, model:, tools: [], system_instruction: "", sub_agents: [], output_key: nil)
           @name = name
           @description = description
           @model = model
@@ -21,8 +21,16 @@ module Adk
             @system_instruction = [system_instruction,sub_agents_instruction].join("\n")
           end
 
-          @session = session ||
-            Sessions::Session.new(contents: [])
+          @session = Sessions::Session.instance
+          @output_key = output_key
+        end
+
+        def system_instruction
+          inst = @system_instruction
+          inst.scan(/\{([^}]+)\}/).flatten.each do |variable|
+            inst = inst.gsub("{#{variable}}", @session.outputs[variable])
+          end
+          inst
         end
 
         def run
@@ -38,7 +46,7 @@ module Adk
             @session.contents << {parts: [{ text: prompt}], role: "user" }
           end
 
-          model.generate_content(contents: @session.contents, tools: @tools, system_instruction: @system_instruction) do |response|
+          model.generate_content(contents: @session.contents, tools: @tools, system_instruction: system_instruction) do |response|
             # puts response.json_response
             @session.contents << {parts: response.model_content_parts, role: "model"}
 
@@ -53,7 +61,9 @@ module Adk
             end
 
             if text
-              # puts @session.contents
+              if @output_key
+                @session.outputs[@output_key] = text
+              end
               puts "[#{@name}] #{text}"
             end
 
@@ -76,6 +86,7 @@ module Adk
             puts "[#{@name}] Calling function #{function["name"]}(#{function["args"]})"
             result = tool.callable.call(**sym_args)
           rescue Exception => error
+            puts "Error calling function: #{error}"
             result = error.message
           end
         end
@@ -123,7 +134,8 @@ module Adk
             },
             callable: ->(agent_name:) {
               puts "[#{@name}] Calling another agent: #{agent_name} with prompt: #{@session.last_user_prompt}"
-              sub_agents.find{|agent| agent.name == agent_name}.handle_prompt(prompt: @session.last_user_prompt)
+              agent = sub_agents.find{|agent| agent.name == agent_name}
+              agent.handle_prompt(prompt: @session.last_user_prompt)
             }
           )
         end

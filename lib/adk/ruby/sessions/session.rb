@@ -3,14 +3,20 @@ module Adk
     module Sessions
       class Session
 
-        attr_accessor :contents
-        def initialize(contents:)
-          @contents = contents
-        end
+        attr_accessor :contents, :outputs
 
         def last_user_prompt
-          # puts "contents= #{@contents}"
           @contents.reverse.find{|content|content[:role] == 'user'}[:parts][0][:text]
+        end
+
+        def self.instance
+          @instance ||= new
+        end
+
+        private
+        def initialize(contents: [])
+          @contents = contents
+          @outputs = {}
         end
 
       end
