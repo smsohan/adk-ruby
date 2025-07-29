@@ -15,7 +15,7 @@ module Adk
           @location = location
         end
 
-        def generate_content(prompt:, tools:)
+        def generate_content(contents:, tools:)
           url = "https://generativelanguage.googleapis.com/v1beta/models/#{@name}:generateContent?key=#{ENV['GEMINI_API_KEY']}"
           uri = URI(url)
           http = Net::HTTP.new(uri.host, uri.port)
@@ -23,13 +23,7 @@ module Adk
           request = Net::HTTP::Post.new(uri.path + "?" + uri.query)
           request['Content-Type'] = 'application/json'
           request.body = {
-            contents: [
-              {
-                parts: [
-                  { text: prompt }
-                ]
-              }
-            ],
+            contents: contents,
             tools: tools_as_json(tools: tools)
           }.to_json
 

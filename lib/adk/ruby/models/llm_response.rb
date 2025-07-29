@@ -7,7 +7,6 @@ module Adk
           @json_response = json_response
         end
 
-        #[{"content"=>{"parts"=>[{"text"=>"800 + 560 = 1360"}]
         def text_parts
           @text_parts ||= @json_response["candidates"].map do |candidate|
             candidate["content"]["parts"].map do |part|
@@ -30,6 +29,14 @@ module Adk
 
         def function_call
           function_calls.first
+        end
+
+        def id
+          @json_response["responseId"]
+        end
+
+        def model_content_parts
+          @json_response["candidates"][0]["content"]["parts"]
         end
       end
     end

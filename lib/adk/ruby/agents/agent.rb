@@ -13,25 +13,61 @@ module Adk
         end
 
         def run
+          contents = []
           while true
             puts "[User]"
             message = gets
-            model.generate_content(prompt: message, tools: @tools) do |response|
-              puts response.json_response
-              text, function_call = response.text_part, response.function_call
-
-              if function_call
-                result = call_function(function: function_call)
-              end
-            end
+            handle_prompt(prompt: message, contents: contents)
           end
         end
+
+        private
 
         def call_function(function:)
           tool = @tools.find{|tool| tool.name == function["name"]}
           sym_args = function["args"].transform_keys(&:to_sym)
           result = tool.callable.call(**sym_args)
         end
+
+        def handle_prompt(prompt:, contents:)
+          if prompt
+            contents << {parts: [{ text: prompt}], role: "user" }
+          end
+
+          model.generate_content(contents: contents, tools: @tools) do |response|
+            contents << {parts: response.model_content_parts, role: "model"}
+            puts response.json_response
+            puts "contents = #{contents}"
+            text, function_call = response.text_part, response.function_call
+            if function_call
+              result = call_function(function: function_call)
+              puts "result = #{result}"
+              contents << function_calls_parts(id: response.id, function_call: function_call, result: result)
+              handle_prompt(prompt: nil, contents: contents)
+            end
+            if text
+              puts text
+            end
+
+          end
+        end
+
+        def function_calls_parts(id:, function_call:, result:)
+          {
+            parts:
+            [{
+              functionResponse: {
+                id: id,
+                name: function_call["name"],
+                response: {
+                  output: result
+                }
+              }
+            }],
+            role: "function"
+          }
+        end
+
 
       end
     end
