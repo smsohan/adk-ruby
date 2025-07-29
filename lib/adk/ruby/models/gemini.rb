@@ -15,17 +15,22 @@ module Adk
           @location = location
         end
 
-        def generate_content(contents:, tools:)
+        def generate_content(contents:, tools:, system_instruction:)
           url = "https://generativelanguage.googleapis.com/v1beta/models/#{@name}:generateContent?key=#{ENV['GEMINI_API_KEY']}"
           uri = URI(url)
           http = Net::HTTP.new(uri.host, uri.port)
           http.use_ssl = true
           request = Net::HTTP::Post.new(uri.path + "?" + uri.query)
           request['Content-Type'] = 'application/json'
-          request.body = {
+          body = {
             contents: contents,
             tools: tools_as_json(tools: tools)
-          }.to_json
+          }
+
+          if system_instruction
+            body["system_instruction"] = {parts: [{text: system_instruction}]}
+          end
+          request.body = body.to_json
 
           http.request(request) do |res|
             res.read_body do |chunk|

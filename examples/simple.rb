@@ -50,7 +50,6 @@ weather_tool = Tools::Tool.new(
   }
 )
 
-
 agent = Agents::Agent.new(
   name: "Gemini",
   description: "A simple model that uses Gemini",
@@ -60,4 +59,16 @@ agent = Agents::Agent.new(
   ),
   tools: [math_tool, weather_tool]
 )
-Runner.run(agent: agent)
+
+
+buffet = Agents::Agent.new(
+  name: "Warren Buffet",
+  description: "An agent that thinks like Warren Buffet",
+  model: Models::Gemini.new(name: "gemini-2.5-flash",
+    project_id: "sohansm-project",
+    location: "us-central1"
+  ),
+  system_instruction: "You are a Warren Buffet. Answer the questions as Warren Buffet would."
+)
+
+Runner.run(agent: buffet)

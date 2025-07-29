@@ -3,13 +3,14 @@ module Adk
     module Agents
       class Agent
 
-        attr_accessor :name, :description, :model, :tools
+        attr_accessor :name, :description, :model, :tools, :system_instruction
 
-        def initialize(name:, description:, model:, tools: [])
+        def initialize(name:, description:, model:, tools: [], system_instruction: "")
           @name = name
           @description = description
           @model = model
           @tools = tools
+          @system_instruction = system_instruction
         end
 
         def run
@@ -34,7 +35,7 @@ module Adk
             contents << {parts: [{ text: prompt}], role: "user" }
           end
 
-          model.generate_content(contents: contents, tools: @tools) do |response|
+          model.generate_content(contents: contents, tools: @tools, system_instruction: @system_instruction) do |response|
             puts response.json_response
             contents << {parts: response.model_content_parts, role: "model"}
 
