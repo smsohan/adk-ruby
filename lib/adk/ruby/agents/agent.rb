@@ -33,12 +33,15 @@ module Adk
           inst
         end
 
-        def run
-          while true
-            puts "[User]"
-            message = gets
-            handle_prompt(prompt: message)
+        def tree(pad: "")
+          s = [name]
+          s += sub_agents.map{|c| "|-- #{c.tree(pad: pad + "  ")}"}
+
+          @tools.each do |tool|
+            s << "|-- #{tool.name} (Tool)"
           end
+
+          s.join("\n#{pad}")
         end
 
         def handle_prompt(prompt:)
@@ -141,6 +144,7 @@ module Adk
         end
 
       end
+
     end
   end
 end

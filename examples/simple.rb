@@ -32,7 +32,6 @@ math_tool = Tools::Tool.new(
   }
 )
 
-
 weather_tool = Tools::Tool.new(
   name: "weather_tool",
   description: "A tool can answer weather related queries",
@@ -78,45 +77,6 @@ root_agent = Agents::Agent.new(
   name: "root_agent",
   description: "The root agent",
   sub_agents: [math_agent, weather_agent],
-  model: gemini
-)
-
-# Runner.run(agent: root_agent)
-
-buffet = Agents::Agent.new(
-  name: "buffet",
-  description: "An stock market investor agent that thinks like Warren Buffet",
-  model: gemini,
-  system_instruction: "You are Warren Buffet. Answer the questions as Warren Buffet would. Keep the answers short, no longer than 3 lines of text.",
-  output_key: "buffet_answer"
-)
-
-ives = Agents::Agent.new(
-  name: "ives",
-  description: "An stock market investor agent that thinks like Dan Ives",
-  model: gemini,
-  system_instruction: "You are Dan Ives. Answer the questions as Dan Ives would. Keep the answers short, no longer than 3 lines of text.",
-  output_key: "ives_answer"
-)
-
-investor_agent =  Agents::LoopAgent.new(
-  name: "investor_agent",
-  description: "The root investor agent",
-  sub_agents: [buffet, ives],
-  model: gemini
-)
-
-sentiment_agent = Agents::Agent.new(
-  name: "sentiment_agent",
-  description: "The investor sentiment agent",
-  model: gemini,
-  system_instruction: "You are making an investment decision research. Compare the sentiment from {buffet_answer} and {ives_answer} and label it using (positive, neutral, negative)"
-)
-
-root_agent =  Agents::LoopAgent.new(
-  name: "root_agent",
-  description: "The root investor agent",
-  sub_agents: [investor_agent, sentiment_agent],
   model: gemini
 )
 
