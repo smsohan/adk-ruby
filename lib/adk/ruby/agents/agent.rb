@@ -34,11 +34,11 @@ module Adk
         end
 
         def tree(pad: "")
-          s = [name]
+          s = ["#{name} (#{self.class.name.split("::").last})"]
           s += sub_agents.map{|c| "|-- #{c.tree(pad: pad + "  ")}"}
 
           @tools.each do |tool|
-            s << "|-- #{tool.name} (Tool)"
+            s << "|-- #{tool.name} (#{tool.class.name.split("::").last})"
           end
 
           s.join("\n#{pad}")
@@ -53,14 +53,19 @@ module Adk
             # puts response.json_response
             @session.contents << {parts: response.model_content_parts, role: "model"}
 
-            text, function_call = response.text_part, response.function_call
-            if function_call
-              result = call_function(function: function_call)
-              return if function_call["name"] == "transfer_agent_tool"
+            text, function_calls = response.text_part, response.function_calls
+            unless function_calls.empty?
 
-              @session.contents << function_calls_parts(id: response.id, function_call: function_call, result: result)
+              function_calls.each do |function_call|
+                result = call_function(function: function_call)
+                return if function_call["name"] == "transfer_agent_tool"
+
+                @session.contents << function_calls_parts(id: response.id, function_call: function_call, result: result)
+              end
+
               handle_prompt(prompt: nil)
               return
+
             end
 
             if text

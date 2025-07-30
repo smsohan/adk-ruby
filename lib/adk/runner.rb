@@ -12,8 +12,12 @@ module Adk
 
         trap("SIGINT") { exit }
         while true
-          puts "[User]"
-          agent.handle_prompt(prompt: gets)
+          print "[prompt] "
+
+          prompt = gets.chomp
+          break if prompt == "exit"
+
+          agent.handle_prompt(prompt: prompt) unless prompt.empty?
         end
 
       end
