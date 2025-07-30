@@ -82,7 +82,7 @@ classDiagram
 
     Model <|-- Gemini: Is a
 
-    Runner --> Agent: starts
+    Runner --> Agent: agent loop
     Agent *-- Agent: sub_agents
     Agent --> Session: singleton
     Agent --> Model: uses
