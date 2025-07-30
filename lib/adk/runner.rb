@@ -1,4 +1,5 @@
 require_relative "ruby/version"
+require_relative "ruby/sessions/session"
 
 module Adk
   module Ruby
@@ -20,6 +21,11 @@ module Adk
           agent.handle_prompt(prompt: prompt) unless prompt.empty?
         end
 
+        puts "\n\n" + '*' * 30 +  " Session Summary " + '*' * 30 + "\n\n"
+
+        puts Sessions::Session.instance.contents
+
+        puts "\n\n" + '*' * 30 +  " bye bye! " + '*' * 30
       end
     end
   end
