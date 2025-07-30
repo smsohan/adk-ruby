@@ -1,3 +1,5 @@
+# Shows two agents with their own tools being used together
+
 require_relative "../lib/adk/runner"
 require_relative "../lib/adk/ruby/agents/agent"
 require_relative "../lib/adk/ruby/agents/loop_agent"

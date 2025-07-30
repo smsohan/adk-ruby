@@ -1,3 +1,5 @@
+# Shows a minimal agent
+
 require_relative "../lib/adk/runner"
 require_relative "../lib/adk/ruby/agents/agent"
 require_relative "../lib/adk/ruby/agents/loop_agent"
