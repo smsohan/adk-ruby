@@ -67,19 +67,22 @@ classDiagram
     }
 
     class Agent{
-        +string run_prompt(prompt:)
+        +run_prompt(prompt)
     }
 
     class Tool{
-        +lambda callable
+        +callable
     }
 
     Agent <|-- LoopAgent: Is a
 
     class Session{
-        +Hash outputs
+        +outputs
     }
 
+    class Model {
+        +generate_content(coversation, tools, system_instructions)
+    }
     Model <|-- Gemini: Is a
 
     Runner --> Agent: agent loop
