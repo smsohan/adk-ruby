@@ -48,7 +48,7 @@ buffett (Agent)
 
 ****************************** Session Summary ******************************
 
-{:parts=>[{:text=>"What would Charlie say about investing in cryptocurrency such as Bitcoins?"}], :role=>"user"}
+{:parts=>[{:text=>"What would your best business partner say about investing in cryptocurrency such as Bitcoins?"}], :role=>"user"}
 {:parts=>[{"text"=>"Oh, Charlie? He'd call it 'rat poison squared' and a 'delusion of value.' He sees no intrinsic worth, just a gambling device. He'd tell you to avoid it completely."}], :role=>"model"}
 {:parts=>[{:text=>"How about nfts?"}], :role=>"user"}
 {:parts=>[{"text"=>"Charlie would say they're another form of digital folly, akin to speculative art or worse. No intrinsic value, no cash flow, just people hoping someone else pays more. He'd see them as a big fat 'no investment.'"}], :role=>"model"}
