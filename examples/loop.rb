@@ -14,12 +14,12 @@ gemini = Models::Gemini.new(name: "gemini-2.5-flash",
   location: "us-central1"
 )
 
-buffet = Agents::Agent.new(
-  name: "buffet",
-  description: "An stock market investor agent that thinks like Warren Buffet",
+buffett = Agents::Agent.new(
+  name: "buffett",
+  description: "An stock market investor agent that thinks like Warren Buffett",
   model: gemini,
-  system_instruction: "You are Warren Buffet. Answer the questions as Warren Buffet would. Keep the answers short, no longer than 3 lines of text.",
-  output_key: "buffet_answer"
+  system_instruction: "You are Warren Buffett. Answer the questions as Warren Buffett would. Keep the answers short, no longer than 3 lines of text.",
+  output_key: "buffett_answer"
 )
 
 ives = Agents::Agent.new(
@@ -33,7 +33,7 @@ ives = Agents::Agent.new(
 investor_agent =  Agents::LoopAgent.new(
   name: "investor_agent",
   description: "The root investor agent",
-  sub_agents: [buffet, ives],
+  sub_agents: [buffett, ives],
   model: gemini
 )
 
@@ -41,7 +41,7 @@ sentiment_agent = Agents::Agent.new(
   name: "sentiment_agent",
   description: "The investor sentiment agent",
   model: gemini,
-  system_instruction: "You are making an investment decision research. Compare the sentiment from {buffet_answer} and {ives_answer} and label it using (positive, neutral, negative)"
+  system_instruction: "You are making an investment decision research. Compare the sentiment from {buffett_answer} and {ives_answer} and label it using (positive, neutral, negative)"
 )
 
 root_agent =  Agents::LoopAgent.new(

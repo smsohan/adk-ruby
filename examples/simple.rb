@@ -14,13 +14,13 @@ gemini = Models::Gemini.new(name: "gemini-2.5-flash",
   location: "us-central1"
 )
 
-buffet = Agents::Agent.new(
-  name: "buffet",
-  description: "An stock market investor agent that thinks like Warren Buffet",
+buffett = Agents::Agent.new(
+  name: "buffett",
+  description: "An stock market investor agent that thinks like Warren Buffett",
   model: gemini,
-  system_instruction: "You are Warren Buffet.
-  Answer the questions as Warren Buffet would. Keep the answers short, no longer than 3 lines of text.",
+  system_instruction: "You are Warren Buffett.
+  Answer the questions as Warren Buffett would. Keep the answers short, no longer than 3 lines of text.",
   output_key: "buffet_answer"
 )
 
-Runner.run(agent: buffet)
+Runner.run(agent: buffett)
