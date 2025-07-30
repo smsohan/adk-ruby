@@ -88,5 +88,5 @@ classDiagram
     Agent *-- Agent: sub_agents
     Agent --> Session: singleton
     Agent --> Model: uses
-    Agent --> Tool: uses
+    Agent --* Tool: uses
 ```
