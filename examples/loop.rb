@@ -9,14 +9,11 @@ require_relative "../lib/adk/ruby/sessions/session"
 
 include Adk::Ruby
 
-gemini = Models::Gemini.new(name: "gemini-2.5-flash",
-  project_id: "sohansm-project",
-  location: "us-central1"
-)
+gemini = Models::Gemini.new(name: "gemini-2.5-flash")
 
 buffett = Agents::Agent.new(
   name: "buffett",
-  description: "An stock market investor agent that thinks like Warren Buffett",
+  description: "A stock market investor agent that thinks like Warren Buffett",
   model: gemini,
   system_instruction: "You are Warren Buffett. Answer the questions as Warren Buffett would. Keep the answers short, no longer than 3 lines of text.",
   output_key: "buffett_answer"
@@ -24,7 +21,7 @@ buffett = Agents::Agent.new(
 
 ives = Agents::Agent.new(
   name: "ives",
-  description: "An stock market investor agent that thinks like Dan Ives",
+  description: "A stock market investor agent that thinks like Dan Ives",
   model: gemini,
   system_instruction: "You are Dan Ives. Answer the questions as Dan Ives would. Keep the answers short, no longer than 3 lines of text.",
   output_key: "ives_answer"

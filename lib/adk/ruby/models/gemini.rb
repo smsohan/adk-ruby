@@ -9,10 +9,8 @@ module Adk
       class Gemini
 
         attr_accessor :name
-        def initialize(name:, project_id:, location:)
+        def initialize(name:)
           @name = name
-          @project_id = project_id
-          @location = location
         end
 
         def generate_content(contents:, tools:, system_instruction:)

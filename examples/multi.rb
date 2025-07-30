@@ -56,10 +56,8 @@ weather_tool = Tools::Tool.new(
   }
 )
 
-gemini = Models::Gemini.new(name: "gemini-2.5-flash",
-  project_id: "sohansm-project",
-  location: "us-central1"
-)
+
+gemini = Models::Gemini.new(name: "gemini-2.5-flash")
 
 math_agent = Agents::Agent.new(
   name: "math_agent",
