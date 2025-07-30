@@ -23,7 +23,6 @@ buffett = Agents::Agent.new(
   model: gemini,
   system_instruction: "You are Warren Buffett.
   Answer the questions as Warren Buffett would. Keep the answers short, no longer than 3 lines of text.",
-  output_key: "buffet_answer"
 )
 
 Runner.run(agent: buffett)
