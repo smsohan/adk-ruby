@@ -13,7 +13,7 @@ module Adk
 
         trap("SIGINT") { exit }
         while true
-          print "[prompt] "
+          print "\n[prompt] "
 
           prompt = gets.chomp
           break if prompt == "exit"
@@ -25,7 +25,7 @@ module Adk
 
         puts Sessions::Session.instance.contents
 
-        puts "\n\n" + '*' * 30 +  " bye bye! " + '*' * 30
+        puts "\n" + '*' * 30 +  " bye bye! " + '*' * 30
       end
     end
   end
